@@ -25,12 +25,17 @@ const Home = () => {
   }
 
   useEffect(() => {
-    const data = supabase.auth.getUser();
+    const data = supabase.auth.getSession();
+
+    data.then((response) => setUser(response.data.session.user))
 
     supabase.auth.onAuthStateChange((event, session) => {
       switch (event) {
         case 'SIGNED_IN':
-          data.then((response) => setUser(response.data.user))
+          data.then((response) => {
+            setUser(response.data.session.user)
+            console.log(response.data.session.user)
+          })
           break;
         
         case 'SIGNED_OUT':
